@@ -1,0 +1,42 @@
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  server:
+    port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: user
+    password: pass
+    driver-class-name: org.postgresql.Driver
+  cloud:
+    stream:
+      bindings:
+        demoProduceQueue:
+          destination: testCreatedMessage
+        testQueue-in-0:
+          destination: testCreatedMessage
+          group: testQueue
+      rabbit:
+        bindings:
+          demoProduceQueue:
+            producer:
+              bind-queue: true
+          testQueue-in-0:
+            consumer:
+              bind-queue: true
+
+      binders:
+        local_rabbit:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: localhost
+                port: 5672
+                username: guest
+                password: guest
+                virtual-host: /
